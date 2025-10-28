@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <time.h>
+
+#define MAX 1000
+
+long long dp[MAX];
+
+long long fib_memo(int n) {
+    if (dp[n] != -1)
+        return dp[n];
+    if (n <= 1)
+        return dp[n] = n;
+    return dp[n] = fib_memo(n - 1) + fib_memo(n - 2);
+}
+
+void print_series(int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%lld ", fib_memo(i));
+    }
+    printf("\n");
+}
+
+int main() {
+    int n;
+    clock_t start, end;
+    double time_taken;
+
+    printf("Enter the value of n: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < MAX; i++) {
+        dp[i] = -1;
+    }
+
+    printf("\nFibonacci Series up to %d terms:\n", n);
+    print_series(n);
+
+    start = clock();
+    long long result = fib_memo(n);
+    end = clock();
+
+    time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("\nThe %dth Fibonacci number = %lld\n", n, result);
+    printf("Execution time: %f seconds\n", time_taken);
+
+    return 0;
+}
