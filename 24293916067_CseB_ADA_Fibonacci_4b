@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <time.h>
+
+void fibonacci_iterative(int n) {
+    long long f0 = 0, f1 = 1, fn;
+
+    printf("Fibonacci Series up to %d terms:\n", n);
+
+    if (n >= 1) printf("%lld ", f0);
+    if (n >= 2) printf("%lld ", f1);
+
+    for (int i = 2; i < n; i++) {
+        fn = f0 + f1;
+        printf("%lld ", fn);
+        f0 = f1;
+        f1 = fn;
+    }
+    printf("\n");
+}
+
+int nth_fibonacci(int n) {
+    long long f0 = 0, f1 = 1, fn;
+
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+
+    for (int i = 2; i <= n; i++) {
+        fn = f0 + f1;
+        f0 = f1;
+        f1 = fn;
+    }
+    return fn;
+}
+
+int main() {
+    int n_values[] = {10, 20, 30, 40, 50, 60};
+    int size = sizeof(n_values) / sizeof(n_values[0]);
+
+    clock_t start, end;
+    double time_taken;
+
+    for (int k = 0; k < size; k++) {
+        int n = n_values[k];
+        printf("\n=== For n = %d ===\n", n);
+
+        fibonacci_iterative(n);
+
+        start = clock();
+        long long result = nth_fibonacci(n);
+        end = clock();
+
+        time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+        printf("The %dth Fibonacci number = %lld\n", n, result);
+        printf("Execution time: %f seconds\n", time_taken);
+    }
+
+    return 0;
+}
