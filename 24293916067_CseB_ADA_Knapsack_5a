@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct {
+    int value, weight;
+    double ratio;
+} Item;
+
+int cmp(const void *a, const void *b) {
+    double r1 = ((Item*)a)->ratio;
+    double r2 = ((Item*)b)->ratio;
+    if (r1 < r2) return 1;
+    if (r1 > r2) return -1;
+    return 0;
+}
+
+double fractionalKnapsack(Item items[], int n, int W) {
+    qsort(items, n, sizeof(Item), cmp);
+    double totalValue = 0.0;
+    for (int i = 0; i < n; i++) {
+        if (W >= items[i].weight) {
+            W -= items[i].weight;
+            totalValue += items[i].value;
+        } else {
+            totalValue += items[i].ratio * W;
+            break;
+        }
+    }
+    return totalValue;
+}
+
+int main() {
+    srand(time(NULL));
+    int n, W;
+    printf("Enter number of items (n): ");
+    scanf("%d", &n);
+    printf("Enter knapsack capacity (W): ");
+    scanf("%d", &W);
+    
+    Item *items = (Item*)malloc(n * sizeof(Item));
+    for (int i = 0; i < n; i++) {
+        items[i].value = rand() % 100 + 1;
+        items[i].weight = rand() % 50 + 1;
+        items[i].ratio = (double)items[i].value / items[i].weight;
+    }
+
+    clock_t start = clock();
+    double maxValue = fractionalKnapsack(items, n, W);
+    clock_t end = clock();
+
+    double exec_time = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Maximum value (Greedy Fractional): %f\n", maxValue);
+    printf("Execution Time (Greedy): %f seconds\n", exec_time);
+
+    free(items);
+    return 0;
+}
